@@ -174,7 +174,7 @@ def shap_explanation(x_row, pred, shap_values, threshold=100, top_k=3):
 # =========================================================
 if st.button("Run Prediction"):
 
-    explainer = shap.TreeExplainer(rf_model)
+    explainer = shap.TreeExplainer(rf_model)   # ✅ outside loop
 
     st.subheader("Prediction Results")
 
@@ -187,15 +187,24 @@ if st.button("Run Prediction"):
             axis=0
         ).to_frame().T
 
-        x = x[feature_cols]
-        x_scaled = scaler.transform(x)
+        # Ensure inference data matches training features
+        for col in feature_cols:
+            if col not in x.columns:
+                x[col] = 0
 
+        x = x[feature_cols]
+
+        # Prediction uses scaled data
+        x_scaled = scaler.transform(x)
         pred = rf_model.predict(x_scaled)[0]
+
+        # SHAP uses unscaled data
         shap_vals = explainer.shap_values(x)[0]
 
         risk, reasons = shap_explanation(
             x.iloc[0], pred, shap_vals
         )
+
 
         st.markdown(f"### Event {i+1}")
         st.write(f"**Predicted Leachate:** {pred:.2f}")
@@ -204,5 +213,6 @@ if st.button("Run Prediction"):
         st.write("**Explanation:**")
         for r in reasons:
             st.write("•", r)
+
 
 
