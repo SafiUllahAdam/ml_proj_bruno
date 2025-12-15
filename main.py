@@ -21,9 +21,9 @@ st.write("Rock-based leachate prediction using ML + SHAP explainability")
 # =========================================================
 @st.cache_resource
 def load_assets():
-    model = joblib.load("rf_model.joblib")
-    scaler = joblib.load("scaler.joblib")
-    feature_cols = joblib.load("feature_cols.joblib")
+    model = joblib.load("rf_model (1).joblib")
+    scaler = joblib.load("scaler (1).joblib")
+    feature_cols = joblib.load("feature_cols (1).joblib")
     return model, scaler, feature_cols
 
 rf_model, scaler, feature_cols = load_assets()
@@ -231,4 +231,5 @@ if st.button("Run Prediction"):
 
         for r in reasons:
             st.write("•", r)
+
 
